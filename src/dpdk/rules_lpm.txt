@@ -1,0 +1,2 @@
+match 0xC0A80A00/0xffffff00 action ipv4_forward dstAddr 0x1 port_id 0x0
+match 0xC0A81400/0xffffff00 action ipv4_forward dstAddr 0x2 port_id 0x1

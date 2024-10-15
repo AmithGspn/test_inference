@@ -189,8 +189,8 @@ control MyIngress(inout headers hdr,
     }
     table ml_code{
         key = {
-            meta.feature1          : range ;
-            hdr.ipv4.totalLen : range ;
+            meta.feature1          : ternary ;
+            hdr.ipv4.totalLen : ternary ;
         }
         actions = {
             NoAction;

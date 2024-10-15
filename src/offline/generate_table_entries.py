@@ -81,8 +81,8 @@ def write_entry(f, domain, classification):
             if range_end > hi:
                 range_end = hi
                 
-            # mask = generate_mask(range_start, range_end)
-            split_ranges[FEATURE_NAMES[i]].append((range_start, range_end))
+            mask = generate_mask(range_start, range_end)
+            split_ranges[FEATURE_NAMES[i]].append((hex(range_start), hex(mask)))
             # print(split_ranges)
             # Update range_start for the next iteration
             range_start = range_end + 1

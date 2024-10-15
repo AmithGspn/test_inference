@@ -31,6 +31,26 @@ FEATURE_NAMES = ["diffLen", "len"]
 
 priority=0
 split_ranges = {feature: [] for feature in FEATURE_NAMES}
+
+def generate_mask(range_start, range_end):
+    
+    # XOR the start and end, which will show the bits that are different
+    range_xor = range_start ^ range_end
+   
+    # Calculate the number of bits needed for the start and end
+    max_bit_length = max(range_start.bit_length(), range_end.bit_length())
+
+    # Create the mask: find the first differing bit position and create a mask
+    significant_bits = range_xor.bit_length()
+   
+    # All bits up to the first differing bit will be fixed (set to 1), the rest will be wildcards (set to 0)
+    if significant_bits == 0:
+        mask = 0xFFFFFFFFF  # All bits are identical
+    else:
+        mask = ~((1 << significant_bits) - 1) & 0xFFFFFFFFF
+   
+    return mask
+
 def write_entry(f, domain, classification):
     global priority
     clause = []
@@ -43,8 +63,8 @@ def write_entry(f, domain, classification):
         val = domain[ fe ]
         lo = val["min"]
         hi = val["max"]
-        print(lo)
-        print(hi)
+        # print(lo)
+        # print(hi)
         # we are in a Decision Tree condition (lo, hi], i.e., lo < v <= hi
         #  need to translate to [lo, hi]
         lo = int(lo) + 1
@@ -122,7 +142,7 @@ def minimize( path ):
 
 # Visite the tree using Depth-first search
 def visite(dt, node_id, features, file, path = [] ):
-    print("visit")
+    # print("visit")
     classes = dt.classes_
     tree  = dt.tree_
     left  = tree.children_left

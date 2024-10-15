@@ -27,13 +27,12 @@ inputfile  = args.i
 outputfile = args.o
 
 
-FEATURE_NAMES = ["len", "diffLen"]
+FEATURE_NAMES = ["diffLen", "len"]
 
 priority=0
 split_ranges = {feature: [] for feature in FEATURE_NAMES}
 def write_entry(f, domain, classification):
     global priority
-    priority += 1
     clause = []
     # for each feature in order
     for i in range(0, len(FEATURE_NAMES)):
@@ -68,8 +67,7 @@ def write_entry(f, domain, classification):
             # Update range_start for the next iteration
             range_start = range_end + 1
     # print(split_ranges)
-    combinations_list = list(itertools.product(split_ranges["len"], split_ranges["diffLen"]))
-    print(combinations_list)
+    combinations_list = list(itertools.product(split_ranges["diffLen"], split_ranges["len"]))
 
     # Loop through split_ranges to create formatted strings and append to clause
     for combination in combinations_list:
@@ -94,13 +92,13 @@ def write_entry(f, domain, classification):
 def minimize( path ):
     # range of possible values of each feature 
     DOMAIN = {
-        "len" : {
-            "min": 0, 
-            "max": 0xFFFF #max size of an IP packet
-        },
         "diffLen" : {
             "min": 0, 
             "max": 2*0xFFFF #2 times of packet size
+        },
+        "len" : {
+            "min": 0, 
+            "max": 0xFFFF #max size of an IP packet
         }
     }
 

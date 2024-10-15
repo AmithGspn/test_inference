@@ -38,15 +38,16 @@ Y = [i[-1]   for i in data] #last column is "classification"
 X = np.array(X)
 Y = np.array(Y)
 
-# print(X)
+print(X, Y)
 
 # decision tree: https://scikit-learn.org/stable/modules/tree.html#tree
 dt = tree.DecisionTreeClassifier()
+print(dt)
 dt.fit(X, Y)
 
 # visualize the tree
 plt.figure( dpi=100 )
-tree.plot_tree( dt, filled=True, feature_names=["iat", "len", "diffLen"])
+tree.plot_tree( dt, filled=True, feature_names=["len", "diffLen"])
 plt.savefig("./pcaps/dt.pdf", format='pdf', bbox_inches='tight')
 
 #Predict_Y = dt.predict(X)

@@ -14,7 +14,6 @@ import argparse, csv, os
 
 def extract_features_from_pcap( inputfile, outputfile, classification ):
     results = []
-    last_ts = 0
     last_len = 0
 
     #read the pcap file and extract the features for each packet
@@ -23,21 +22,11 @@ def extract_features_from_pcap( inputfile, outputfile, classification ):
     # for each packet in the pcap file
     for packet in all_packets:
         try:
-            ts     = packet.time # e.g., 1712073023.619379
             ip_len = packet.len  # e.g., 76
 
-            ts = int( ts * 1000000 * 1000) # in nanosecond
-
             # for the first time
-            if last_ts == 0:
-                last_ts = ts
+            if last_len == 0:
                 last_len = ip_len
-                continue
-
-            # get IAT - Inter Arrival Time
-            iat = ts - last_ts
-            if iat < 0:
-                print("Ignore unordered packet ", packet )
                 continue
 
             diff_len = ip_len - last_len
@@ -45,9 +34,7 @@ def extract_features_from_pcap( inputfile, outputfile, classification ):
 
             last_len = ip_len
 
-            last_ts = ts
-
-            metric = {"iat" : iat, "len": ip_len, "diffLen": diff_len, "class": classification}
+            metric = {"diffLen": diff_len, "len": ip_len, "class": classification}
             results.append( metric )
         except AttributeError:
             print("Error while parsing packet", packet)
